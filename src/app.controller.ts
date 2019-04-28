@@ -1,6 +1,6 @@
 import { Controller, Get, Render, Post, Res, Body } from '@nestjs/common';
 import { AppService } from './app.service';
-
+const faker = require('faker');
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) { }
@@ -9,7 +9,7 @@ export class AppController {
   @Render('index')
   root() {
     return {
-      message: 'Baro-Meter',
+      message: `Baro-${faker.commerce.productAdjective()}`,
       geolocate: true,
       results: false
     };
@@ -21,7 +21,7 @@ export class AppController {
     const { latitude, longitude } = body;
     const response = await this.appService.getPressureData([latitude, longitude]);
     return {
-      message: 'Baro-lazy',
+      message: `Baro-${faker.commerce.productAdjective()}`,
       response
     }
   }
