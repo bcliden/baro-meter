@@ -1,6 +1,6 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import 'dotenv/config';
-import { subHours, format, endOfDay, isBefore } from 'date-fns';
+import { subHours, format, isToday } from 'date-fns';
 
 
 @Injectable()
@@ -46,9 +46,9 @@ export class AppService {
 
     let [past, today, future] = [data[0].data, data[1].data, data[2].data];
 
-    // filter out all of fours in future from today
-    today.hourly.data = today.hourly.data.filter( el => {
-      return isBefore(el.time * 1000, Date.now());
+    // filter out all today hours in future
+    future.hourly.data = future.hourly.data.filter( el => {
+      return !isToday(el.time * 1000);
     });
 
     let aggregateHours = this.getHours(
