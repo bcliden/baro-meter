@@ -1,0 +1,26 @@
+{{> header }}
+
+{{> jumbotron }}
+
+<div class="card">
+  <div class="card-body">
+    <p>{{ response.todayForecast }}</p>
+    <canvas 
+      id="baroChart" 
+      style="max-height: 300px",
+      aria-label="Barometric Line Chart" 
+      role="img"></canvas>
+  </div>
+  <div class="card-footer">
+    <a href="https://darksky.net/poweredby/" class="float-right">Powered by Dark Sky</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+<script>
+  // pass template variables to global here
+  const resultsData = {{{ json response }}};
+</script>
+<script async src="scripts/results.js"></script>
+
+{{> footer }}

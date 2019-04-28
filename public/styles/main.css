@@ -1,0 +1,7 @@
+
+
+@media (max-width: 1200px) {
+  .display-3 {
+    font-size: calc(1.525rem + 3.3vw);
+  }
+}

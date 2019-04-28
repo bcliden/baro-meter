@@ -1,0 +1,20 @@
+<form action="/" method="post" class="text-center" d="locationForm">
+
+  <div class="form-row">
+    <div class="input-group mb-3 input-group-lg">
+      <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude">
+      <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude">
+      <div class="input-group-append">
+        <button id="geolocate" class="btn btn-primary" type="button">
+          <i class="fa fa-location-arrow"></i>
+          <span style="display: none;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span style="display: none;" class="sr-only">Loading...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" id="submit" class="btn btn-success btn-lg" disabled>Submit</button>
+
+</form>
+<script async src="scripts/geolocate.js"></script>

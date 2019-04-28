@@ -1,52 +1,13 @@
 {{> header }}
 
-<div class="container">
-  <div class="jumbotron">
+<div class="jumbotron mt-3">
 
+  <h1 class="display-3">{{ message }}</h1>
 
-    <h1 class="display-4">{{ message }}</h1>
+  <p>Recent barometer readings from your area.</p>
 
-    <p>Recent barometer readings from your area.</p>
+  {{> geolocate }}
 
-    <form action="/" method="post" id="locationForm">
-
-      {{!-- <div class="input-group">
-      <label for="sr-only" for="formLocation"></label>
-      <div class="input-group-prepend">
-        <button id="where" class="btn btn-primary" type="button"><i class="fa fa-location-arrow"></i></button>
-      </div>
-      <input type="text" id="formLocation" placeholder="lat, long" name="latlong">
-    </div> --}}
-
-      {{!-- <div class="form-row">
-        <div class="form-group col-md-5">
-          <label for="latitude" class="sr-only">Latitude</label>
-          <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude">
-        </div>
-        <div class="form-group col-md-5">
-          <label for="longitude" class="sr-only">Longitude</label>
-          <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude">
-        </div>
-        <div class="form-group col-md-2">
-          <label for="geolocate" class="sr-only">Locate Me</label>
-          <button id="geolocate" class="btn btn-primary" type="button"><i class="fa fa-location-arrow"></i></button>
-        </div>
-      </div> --}}
-
-      <div class="form-row">
-        <div class="input-group mb-3 input-group-lg">
-          <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude">
-          <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude">
-          <div class="input-group-append">
-            <button id="geolocate" class="btn btn-primary" type="button"><i class="fa fa-location-arrow"></i></button>
-          </div>
-        </div>
-      </div>
-
-      <button type="submit" id="submit" class="btn btn-success" disabled>Submit</button>
-
-    </form>
-  </div>
 </div>
 
 {{> footer }}
