@@ -59,7 +59,8 @@ export class AppService {
 
     const aggregate = {
       todayForecast: future.hourly.summary,
-      hours: aggregateHours
+      hours: aggregateHours,
+      today: format(Date.now(), 'ha, dddd'),
     }
 
     return aggregate;

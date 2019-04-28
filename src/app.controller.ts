@@ -1,5 +1,6 @@
 import { Controller, Get, Render, Post, Res, Body } from '@nestjs/common';
 import { AppService } from './app.service';
+import { format } from 'date-fns';
 const faker = require('faker');
 @Controller()
 export class AppController {
