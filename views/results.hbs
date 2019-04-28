@@ -4,24 +4,25 @@
 
 <div class="card">
   <div class="card-body">
-    <p>{{ response.todayForecast }}</p>
+    <p class="d-flex align-items-start"><i style="border: 1px solid #6c757d; padding: 7px; border-radius: 30px;" class="mr-2 fa fa-{{response.todayForecast.icon}}"><span class="sr-only">{{response.todayForecast.icon}}</span></i>{{ response.todayForecast.text }}</p>
     <canvas 
       id="baroChart" 
       style="max-height: 300px",
       aria-label="Barometric Line Chart" 
       role="img"></canvas>
   </div>
-  <div class="card-footer">
-    <a href="https://darksky.net/poweredby/" class="float-right">Powered by Dark Sky</a>
+  <div class="card-footer d-flex justify-content-between align-items-center">
+    <button class="btn btn-outline-danger" onclick="history.back()">Back</button>
+    <a href="https://darksky.net/poweredby/" >Powered by Dark Sky</a>
   </div>
 </div>
 
-<script async src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-<script async src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
 <script>
-  // pass template variables to global here
+  // passing template variables to global here
   const resultsData = {{{ json response }}};
 </script>
-<script async src="scripts/results.js"></script>
+<script src="scripts/results.js"></script>
 
 {{> footer }}

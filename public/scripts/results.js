@@ -30,7 +30,8 @@ var myChart = new Chart(ctx, {
       }]
     },
     legend: {
-      position: 'bottom'
+      position: 'bottom',
+      onClick: null
     },
     maintainAspectRatio: false,
     aspectRatio: 1.33,
