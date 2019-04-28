@@ -21,47 +21,13 @@ export class AppController {
   async post(@Body() body, @Res() res) {
     const { latitude, longitude } = body;
 
-    // use Promise.all instead of this !!!
-    const { data: past } = await this.appService.getYesterdayBarometerData([latitude, longitude]);
-    const { data: future } = await this.appService.getBarometerData([latitude, longitude])
-    // *****
-    
-    const aggregate = {
-      todayForecast: future.hourly.summary,
-      days:
-        past.daily.data.map(el => (new Date(el.time * 1000)).toDateString()).concat(
-         future.daily.data.map(el => (new Date(el.time * 1000)).toDateString())
-        )
-      ,
-      hours:
-        past.hourly.data.map(el => format(new Date(el.time * 1000), 'ha, dddd')).concat(
-         future.hourly.data.map(el => format(new Date(el.time * 1000), 'ha, dddd'))
-        )
-      ,
-      dayPressure:
-        past.daily.data.map(el => el.pressure).concat(future.daily.data.map(el => el.pressure))
-      ,
-      hourPressure:
-        past.hourly.data.map(el => el.pressure).concat(future.hourly.data.map(el => el.pressure))
-      ,
-    }
 
-    // let response = {
-    //   todayForecast: future.hourly.summary,
-    //   days: future.daily.data.map(el => (new Date(el.time * 1000)).toDateString()),
-    //   hours: future.hourly.data.map(el => {
-    //     return format(new Date(el.time * 1000), 'ha, dddd');
-    //   }),
-    //   dayPressure: future.daily.data.map(el => el.pressure),
-    //   hourPressure: future.hourly.data.map(el => {
-    //     return el.pressure;
-    //   }),
-    //   future
-    // }
 
+    const response = await this.appService.getPressureData([latitude, longitude]);
+    // console.log(response);
     return {
       message: 'Baro-lazy',
-      response: aggregate
+      response
     }
   }
 }
