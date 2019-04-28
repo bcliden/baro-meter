@@ -16,6 +16,7 @@ async function bootstrap() {
     return JSON.stringify(ctx);
   })
 
-  await app.listen(3000);
+  console.log(`app starting on port ${process.env.PORT || 3000}`);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
