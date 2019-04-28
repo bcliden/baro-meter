@@ -1,6 +1,5 @@
 import { Controller, Get, Render, Post, Res, Body } from '@nestjs/common';
 import { AppService } from './app.service';
-import { format } from 'date-fns';
 
 @Controller()
 export class AppController {
@@ -20,11 +19,7 @@ export class AppController {
   @Render('results')
   async post(@Body() body, @Res() res) {
     const { latitude, longitude } = body;
-
-
-
     const response = await this.appService.getPressureData([latitude, longitude]);
-    // console.log(response);
     return {
       message: 'Baro-lazy',
       response

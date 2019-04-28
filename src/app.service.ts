@@ -37,10 +37,6 @@ export class AppService {
   }
 
   public async getPressureData([latitude, longitude]) {
-    // use Promise.all instead of this !!!
-    // const { data: past } = await this.getYesterdayBarometerData([latitude, longitude]);
-    // const { data: future } = await this.getBarometerData([latitude, longitude])
-    // *****
 
     const data = await Promise.all([
       this.getYesterdayBarometerData([latitude, longitude]),
@@ -50,18 +46,8 @@ export class AppService {
 
     let [past, today, future] = [data[0].data, data[1].data, data[2].data];
 
-    // let responseObject = {};
-    // for(let i = 0; i < past.length; i++) {
-    //   let newDate = (new Date())
-    //   responseObject[] = {
-    //     hour: past.hourly.data[i],
-    //     pressure: past.hourly.data[i].pressure
-    //   }
-    // }
-
     // filter out all of fours in future from today
     today.hourly.data = today.hourly.data.filter( el => {
-      console.log(isBefore(el.time * 1000, Date.now()));
       return isBefore(el.time * 1000, Date.now());
     });
 
@@ -74,22 +60,6 @@ export class AppService {
     const aggregate = {
       todayForecast: future.hourly.summary,
       hours: aggregateHours
-      // days:
-      //   past.daily.data.map(el => (new Date(el.time * 1000)).toDateString()).concat(
-      //    future.daily.data.map(el => (new Date(el.time * 1000)).toDateString())
-      //   )
-      // ,
-      // hours:
-      //   past.hourly.data.map(el => format(new Date(el.time * 1000), 'ha, dddd')).concat(
-      //     future.hourly.data.map(el => format(new Date(el.time * 1000), 'ha, dddd'))
-      //   )
-      // ,
-      // dayPressure:
-      //   past.daily.data.map(el => el.pressure).concat(future.daily.data.map(el => el.pressure))
-      // ,
-      // hourPressure:
-      //   past.hourly.data.map(el => el.pressure).concat(future.hourly.data.map(el => el.pressure))
-      // ,
     }
 
     return aggregate;
