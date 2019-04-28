@@ -1,11 +1,11 @@
 
   console.log(resultsData);
 
-  const hours = resultsData.hours.map(el => el.time);
+  const hours = resultsData.hours.map(el => el.time); // LABELS
 
   const baroPressure = {
     label: 'Barometric Pressure (hPa)',
-    data: resultsData.hours.map(el => el.pressure),
+    data: resultsData.hours.map(el => el.pressure), // DATA
     backgroundColor: 'rgba(89, 165, 216, .3)',
     borderColor: 'rgba(89, 165, 216, 1)',
     pointRadius: 0,

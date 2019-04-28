@@ -1,7 +1,6 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import 'dotenv/config';
-import { subHours, format } from 'date-fns';
-import { PassThrough } from 'stream';
+import { subHours, format, endOfDay, isBefore } from 'date-fns';
 
 
 @Injectable()
@@ -59,6 +58,12 @@ export class AppService {
     //     pressure: past.hourly.data[i].pressure
     //   }
     // }
+
+    // filter out all of fours in future from today
+    today.hourly.data = today.hourly.data.filter( el => {
+      console.log(isBefore(el.time * 1000, Date.now()));
+      return isBefore(el.time * 1000, Date.now());
+    });
 
     let aggregateHours = this.getHours(
       past.hourly.data,
