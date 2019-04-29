@@ -18,7 +18,7 @@ function geolocate(e) {
   navigator.geolocation.getCurrentPosition(
     (data) => {
       let { latitude, longitude } = data.coords;
-      [formLat.value, formLong.value] = [latitude, longitude];
+      [formLat.value, formLong.value] = [latitude.toFixed(5), longitude.toFixed(5)];
       toggleLoading();
       checkSubmit(); // check once data is filled
     },
