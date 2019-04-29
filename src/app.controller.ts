@@ -23,7 +23,7 @@ export class AppController {
     const response = await this.appService.getPressureData([latitude, longitude], localOffset);
     return {
       message: `Baro-${faker.commerce.productAdjective()}`,
-      response
+      response,
     }
   }
 }

@@ -89,7 +89,6 @@ export class AppService {
   };
 
   getIcon(value) {
-    console.log(value);
     switch (value) {
       case "clear-day":
         return "sun";
@@ -100,6 +99,7 @@ export class AppService {
       case "snow":
         return "snowflake";
       case "sleet":
+        return "cloud-rain";
       case "wind":
         return "wind";
       case "fog":
