@@ -14,27 +14,27 @@ export class AppService {
 
   getHello(): object {
     return { hello: "world" };
-  }
+  };
 
   private async getFutureBarometerData(coords): Promise<any> {
     const [lat, long] = coords;
     const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long}?exclude=minutely`;
     return await this.httpService.axiosRef.get(url);
-  }
+  };
 
   private async getTodayBarometerData(coords) {
     const [lat, long] = coords;
     const todayInUNIX = Math.floor(new Date().getTime() / 1000);
     const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long},${todayInUNIX}?exclude=minutely,daily,currently`;
     return await this.httpService.axiosRef.get(url);
-  }
+  };
 
   private async getYesterdayBarometerData(coords): Promise<any> {
     const [lat, long] = coords;
     const yesterdayInUNIX = Math.floor(subHours(new Date(), 24).getTime() / 1000);
     const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long},${yesterdayInUNIX}?exclude=minutely,daily,currently`;
     return await this.httpService.axiosRef.get(url);
-  }
+  };
 
   public async getPressureData([latitude, longitude], localOffset) {
 
@@ -47,29 +47,26 @@ export class AppService {
     let [past, today, future] = [data[0].data, data[1].data, data[2].data];
 
     // filter out all today hours in future
-    future.hourly.data = future.hourly.data.filter( el => {
+    future.hourly.data = future.hourly.data.filter(el => {
       return !isToday(el.time * 1000);
     });
-
-    let aggregateHours = this.getHours(
-      past.hourly.data,
-      today.hourly.data,
-      future.hourly.data
-    );
 
     const aggregate = {
       todayForecast: {
         text: future.hourly.summary,
-        icon: future.hourly.icon
+        icon: this.getIcon(today.hourly.icon)
       },
-      hours: aggregateHours,
-      // today: format(subMinutes(new Date().getTime(), localOffset), 'ha, ddd'),
+      hours: this.getHours(
+        past.hourly.data,
+        today.hourly.data,
+        future.hourly.data
+      ),
     }
 
     return aggregate;
-  }
+  };
 
-  getHours(past, today, future){
+  getHours(past, today, future) {
     let pastMap = past.map((el, idx) => {
       return {
         time: format(new Date(el.time * 1000), 'ha, ddd'),
@@ -89,5 +86,32 @@ export class AppService {
       }
     });
     return pastMap.concat(todayMap).concat(futureMap);
-  }
+  };
+
+  getIcon(value) {
+    console.log(value);
+    switch (value) {
+      case "clear-day":
+        return "sun";
+      case "clear-night":
+        return "moon";
+      case "rain":
+        return "cloud-rain";
+      case "snow":
+        return "snowflake";
+      case "sleet":
+      case "wind":
+        return "wind";
+      case "fog":
+        return "smog";
+      case "cloudy":
+        return "cloud";
+      case "partly-cloudy-day":
+        return "cloud-sun";
+      case "partly-cloudy-night":
+        return "cloud-moon";
+      default:
+        return "cloud";
+    }
+  };
 }

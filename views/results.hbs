@@ -4,7 +4,12 @@
 
 <div class="card">
   <div class="card-body">
-    <p class="d-flex align-items-start"><i style="border: 1px solid #6c757d; padding: 7px; border-radius: 30px;" class="mr-2 fa fa-{{response.todayForecast.icon}}"><span class="sr-only">{{response.todayForecast.icon}}</span></i>{{ response.todayForecast.text }}</p>
+    <p class="d-flex align-items-center justify-content-start">
+      <i style="border: 1px solid #6c757d; padding: 7px; border-radius: 30px;" class="mr-2 fa fa-{{response.todayForecast.icon}}">
+        <span class="sr-only">{{response.todayForecast.icon}}</span>
+      </i>
+      {{ response.todayForecast.text }}
+    </p>
     <canvas 
       id="baroChart" 
       style="max-height: 300px",
