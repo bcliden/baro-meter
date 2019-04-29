@@ -19,8 +19,8 @@ export class AppController {
   @Post()
   @Render('results')
   async post(@Body() body, @Res() res) {
-    const { latitude, longitude } = body;
-    const response = await this.appService.getPressureData([latitude, longitude]);
+    const { latitude, longitude, localOffset } = body;
+    const response = await this.appService.getPressureData([latitude, longitude], localOffset);
     return {
       message: `Baro-${faker.commerce.productAdjective()}`,
       response

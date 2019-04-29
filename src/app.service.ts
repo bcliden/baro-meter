@@ -24,7 +24,7 @@ export class AppService {
 
   private async getTodayBarometerData(coords) {
     const [lat, long] = coords;
-    const todayInUNIX = Math.floor(Date.now() / 1000);
+    const todayInUNIX = Math.floor(new Date().getTime() / 1000);
     const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long},${todayInUNIX}?exclude=minutely,daily,currently`;
     return await this.httpService.axiosRef.get(url);
   }
@@ -36,7 +36,7 @@ export class AppService {
     return await this.httpService.axiosRef.get(url);
   }
 
-  public async getPressureData([latitude, longitude]) {
+  public async getPressureData([latitude, longitude], localOffset) {
 
     const data = await Promise.all([
       this.getYesterdayBarometerData([latitude, longitude]),
@@ -63,7 +63,7 @@ export class AppService {
         icon: future.hourly.icon
       },
       hours: aggregateHours,
-      today: format(Date.now(), 'ha, dddd'),
+      // today: format(subMinutes(new Date().getTime(), localOffset), 'ha, ddd'),
     }
 
     return aggregate;
@@ -72,19 +72,19 @@ export class AppService {
   getHours(past, today, future){
     let pastMap = past.map((el, idx) => {
       return {
-        time: format(new Date(el.time * 1000), 'ha, dddd'),
+        time: format(new Date(el.time * 1000), 'ha, ddd'),
         pressure: el.pressure
       }
     });
     let todayMap = today.map((el, idx) => {
       return {
-        time: format(new Date(el.time * 1000), 'ha, dddd'),
+        time: format(new Date(el.time * 1000), 'ha, ddd'),
         pressure: el.pressure
       }
     });
     let futureMap = future.map((el, idx) => {
       return {
-        time: format(new Date(el.time * 1000), 'ha, dddd'),
+        time: format(new Date(el.time * 1000), 'ha, ddd'),
         pressure: el.pressure
       }
     });

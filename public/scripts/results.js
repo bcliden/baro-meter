@@ -3,6 +3,9 @@ console.log(resultsData);
 
 const hours = resultsData.hours.map(el => el.time); // LABELS
 
+const todayDate = dateFns.format(new Date(), 'ha, ddd');
+console.log(todayDate);
+
 const baroPressure = {
   label: 'Barometric Pressure (hPa)',
   data: resultsData.hours.map(el => el.pressure), // DATA
@@ -44,7 +47,7 @@ var myChart = new Chart(ctx, {
           type: 'line',
           mode: 'vertical',
           scaleID: 'x-axis-0',
-          value: resultsData.today,
+          value: todayDate,
           borderColor: '#f02d3a',
           borderWidth: 2,
         }
