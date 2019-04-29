@@ -36,7 +36,7 @@ export class AppService {
     return await this.httpService.axiosRef.get(url);
   };
 
-  public async getPressureData([latitude, longitude], localOffset) {
+  public async getPressureData([latitude, longitude]) {
 
     const data = await Promise.all([
       this.getYesterdayBarometerData([latitude, longitude]),

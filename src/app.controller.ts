@@ -19,11 +19,25 @@ export class AppController {
   @Post()
   @Render('results')
   async post(@Body() body, @Res() res) {
-    const { latitude, longitude, localOffset } = body;
-    const response = await this.appService.getPressureData([latitude, longitude], localOffset);
+    if (
+      !body ||
+      !body.latitude ||
+      isNaN(+body.latitude) ||
+      !body.longitude ||
+      isNaN(+body.longitude)
+    ) {
+      res.redirect('/');
+    }
+    const { latitude, longitude } = body;
+    const response = await this.appService.getPressureData([latitude, longitude]);
     return {
       message: `Baro-${faker.commerce.productAdjective()}`,
       response,
     }
+  }
+
+  @Get('*')
+  catchAll(@Res() res){
+    res.redirect('/');
   }
 }
