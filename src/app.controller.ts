@@ -1,7 +1,10 @@
 import { Controller, Get, Render, Post, Res, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { format } from 'date-fns';
-const faker = require('faker');
+// const faker = require('faker');
+import * as faker from 'faker';
+import * as moment from 'moment-timezone';
+
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) { }
@@ -11,28 +14,33 @@ export class AppController {
   root() {
     return {
       message: `Baro-${faker.commerce.productAdjective()}`,
-      geolocate: true,
-      results: false
     };
   }
 
   @Post()
-  @Render('results')
+  // @Render('results')
   async post(@Body() body, @Res() res) {
     if (
       !body ||
       !body.latitude ||
       isNaN(+body.latitude) ||
       !body.longitude ||
-      isNaN(+body.longitude)
+      isNaN(+body.longitude) ||
+      !body.timezone ||
+      moment.tz.zone(body.timezone) === null
     ) {
       res.redirect('/');
-    }
-    const { latitude, longitude } = body;
-    const response = await this.appService.getPressureData([latitude, longitude]);
-    return {
-      message: `Baro-${faker.commerce.productAdjective()}`,
-      response,
+    } else {
+      const { latitude, longitude, timezone } = body;
+      const response = await this.appService.getPressureData([latitude, longitude], timezone);
+      // return {
+      //   message: `Baro-${faker.commerce.productAdjective()}`,
+      //   response,
+      // }
+      res.render('results', {
+          message: `Baro-${faker.commerce.productAdjective()}`,
+          response,
+        })
     }
   }
 

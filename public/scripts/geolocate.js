@@ -1,10 +1,11 @@
-let formLat, formLong, formSubmit, formLocate;
+let formLat, formLong, formSubmit, formLocate, formTimezone;
 
 function main() {
   formLat = document.querySelector('#latitude');
   formLong = document.querySelector('#longitude');
   formSubmit = document.querySelector('#submit');
   formLocate = document.querySelector('#geolocate');
+  formTimezone = document.querySelector('#timezone');
 
   formLocate.addEventListener('click', geolocate);
   formLong.addEventListener('input', checkSubmit);
@@ -34,6 +35,7 @@ function geolocate(e) {
 function checkSubmit(e) {
   // validate inputs, enable submit if they are ok
   // looking for: numbers only.
+  formTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
   if (
     formLat.value !== ''
     && !isNaN(+formLat.value)

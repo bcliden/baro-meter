@@ -1,6 +1,7 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import 'dotenv/config';
-import { subHours, format, isToday } from 'date-fns';
+// import { subHours, format, isToday, getTime, isSameDay } from 'date-fns';
+import * as moment from 'moment-timezone';
 
 
 @Injectable()
@@ -16,79 +17,86 @@ export class AppService {
     return { hello: "world" };
   };
 
-  private async getFutureBarometerData(coords): Promise<any> {
-    const [lat, long] = coords;
-    const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long}?exclude=minutely`;
-    return await this.httpService.axiosRef.get(url);
-  };
-
-  private async getTodayBarometerData(coords) {
-    const [lat, long] = coords;
-    const todayInUNIX = Math.floor(new Date().getTime() / 1000);
-    const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long},${todayInUNIX}?exclude=minutely,daily,currently`;
-    return await this.httpService.axiosRef.get(url);
-  };
-
-  private async getYesterdayBarometerData(coords): Promise<any> {
-    const [lat, long] = coords;
-    const yesterdayInUNIX = Math.floor(subHours(new Date(), 24).getTime() / 1000);
-    const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long},${yesterdayInUNIX}?exclude=minutely,daily,currently`;
-    return await this.httpService.axiosRef.get(url);
-  };
-
-  public async getPressureData([latitude, longitude]) {
+  public async getPressureData([latitude, longitude], timezone) {
 
     const data = await Promise.all([
-      this.getYesterdayBarometerData([latitude, longitude]),
-      this.getTodayBarometerData([latitude, longitude]),
-      this.getFutureBarometerData([latitude, longitude])
+      this.getYesterdayData([latitude, longitude], timezone),
+      this.getTodayData([latitude, longitude], timezone),
+      this.getForecastData([latitude, longitude])
     ]);
 
-    let [past, today, future] = [data[0].data, data[1].data, data[2].data];
+    let [yesterday, today, forecast] = [data[0].data, data[1].data, data[2].data];
 
-    // filter out all today hours in future
-    future.hourly.data = future.hourly.data.filter(el => {
-      return !isToday(el.time * 1000);
+    // filter out all of today's hours from the forecast
+    forecast.hourly.data = forecast.hourly.data.filter(el => {
+      let elTime = moment.tz(el.time * 1000, timezone); // seconds to milliseconds (UNIX to JS)
+      let nowTime = moment.tz(timezone);
+      return !nowTime.isSame(elTime, 'day');
     });
 
     const aggregate = {
       todayForecast: {
-        text: future.hourly.summary,
+        text: forecast.hourly.summary,
         icon: this.getIcon(today.hourly.icon)
       },
       hours: this.getHours(
-        past.hourly.data,
+        yesterday.hourly.data,
         today.hourly.data,
-        future.hourly.data
+        forecast.hourly.data,
+        timezone
       ),
+      now: moment.tz(timezone).format('ha ddd')
     }
 
     return aggregate;
   };
 
-  getHours(past, today, future) {
-    let pastMap = past.map((el, idx) => {
+  private async getForecastData(coords): Promise<any> {
+    const [lat, long] = coords;
+    const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long}?exclude=minutely,daily`;
+    return await this.httpService.axiosRef.get(url);
+  };
+
+  private async getTodayData(coords, timezone): Promise<any> {
+    const [lat, long] = coords;
+    // const todayInUNIX = Math.floor(new Date().getTime() / 1000);
+    const todayInUNIX = moment.tz(timezone).format('X');
+    const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long},${todayInUNIX}?exclude=minutely,daily,currently`;
+    return await this.httpService.axiosRef.get(url);
+  };
+
+  private async getYesterdayData(coords, timezone): Promise<any> {
+    const [lat, long] = coords;
+    // const yesterdayInUNIX = Math.floor(subHours(new Date(), 24).getTime() / 1000);
+    const yesterdayInUNIX = moment.tz(timezone).subtract(24, 'hours').format('X');
+    const url = `${this.baseUrl}/forecast/${this.key}/${lat},${long},${yesterdayInUNIX}?exclude=minutely,daily,currently`;
+    return await this.httpService.axiosRef.get(url);
+  };
+
+  // parsing dates here is giving them the offset of the server... UTC
+  private getHours(past, today, future, timezone) {
+    let pastMap = past.map(el => {
       return {
-        time: format(new Date(el.time * 1000), 'ha, ddd'),
+        time: moment.tz(el.time * 1000, timezone).format('ha ddd'),
         pressure: el.pressure
       }
     });
-    let todayMap = today.map((el, idx) => {
+    let todayMap = today.map(el => {
       return {
-        time: format(new Date(el.time * 1000), 'ha, ddd'),
+        time: moment.tz(el.time * 1000, timezone).format('ha ddd'),
         pressure: el.pressure
       }
     });
-    let futureMap = future.map((el, idx) => {
+    let futureMap = future.map(el => {
       return {
-        time: format(new Date(el.time * 1000), 'ha, ddd'),
+        time: moment.tz(el.time * 1000, timezone).format('ha ddd'),
         pressure: el.pressure
       }
     });
     return pastMap.concat(todayMap).concat(futureMap);
   };
 
-  getIcon(value) {
+  private getIcon(value) {
     switch (value) {
       case "clear-day":
         return "sun";
@@ -114,4 +122,5 @@ export class AppService {
         return "cloud";
     }
   };
+
 }
