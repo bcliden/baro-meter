@@ -1,7 +1,5 @@
 import { Controller, Get, Render, Post, Res, Body, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
-import { format } from 'date-fns';
-// const faker = require('faker');
 import * as faker from 'faker';
 import * as moment from 'moment-timezone';
 import { LatLongBodyGuard } from './lat-long-body.guard';
