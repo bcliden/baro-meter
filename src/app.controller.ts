@@ -1,9 +1,10 @@
-import { Controller, Get, Render, Post, Res, Body } from '@nestjs/common';
+import { Controller, Get, Render, Post, Res, Body, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { format } from 'date-fns';
 // const faker = require('faker');
 import * as faker from 'faker';
 import * as moment from 'moment-timezone';
+import { LatLongBodyGuard } from './lat-long-body.guard';
 
 @Controller()
 export class AppController {
@@ -18,30 +19,15 @@ export class AppController {
   }
 
   @Post()
-  // @Render('results')
+  @Render('results')
+  @UseGuards(LatLongBodyGuard)
   async post(@Body() body, @Res() res) {
-    if (
-      !body ||
-      !body.latitude ||
-      isNaN(+body.latitude) ||
-      !body.longitude ||
-      isNaN(+body.longitude) ||
-      !body.timezone ||
-      moment.tz.zone(body.timezone) === null
-    ) {
-      res.redirect('/');
-    } else {
       const { latitude, longitude, timezone } = body;
       const response = await this.appService.getPressureData([latitude, longitude], timezone);
-      // return {
-      //   message: `Baro-${faker.commerce.productAdjective()}`,
-      //   response,
-      // }
-      res.render('results', {
-          message: `Baro-${faker.commerce.productAdjective()}`,
-          response,
-        })
-    }
+      return {
+        message: `Baro-${faker.commerce.productAdjective()}`,
+        response,
+      }
   }
 
   @Get('*')

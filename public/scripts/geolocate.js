@@ -7,6 +7,8 @@ function main() {
   formLocate = document.querySelector('#geolocate');
   formTimezone = document.querySelector('#timezone');
 
+  document.forms[0].addEventListener('submit', checkSubmit);
+
   formLocate.addEventListener('click', geolocate);
   formLong.addEventListener('input', checkSubmit);
   formLat.addEventListener('input', checkSubmit);
