@@ -7,7 +7,17 @@ import * as moment from 'moment-timezone';
 export class AppService {
   constructor(
     private readonly httpService: HttpService
-  ) { }
+  ) {
+    if (!this.key) {
+      console.log(`
+      
+      [ERROR]
+      No Dark Sky API key found. see .env.example in project directory.
+      
+      `);
+      process.exit(1);
+    }
+  }
 
   baseUrl = `https://api.darksky.net`;
   key = process.env.DARKSKY_KEY;
